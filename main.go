@@ -119,12 +119,12 @@ func obfuscate(pkgName, outPath string) bool {
 		ldflags += ` -extldflags '-static'`
 	}
 	ldflags += `"`
-	tagsFlag := `-tags "` + tags + `"`
+	tagsFlag := tags
 
 	goCache := newGopath + "/cache"
 	os.Mkdir(goCache, 0755)
 
-	arguments := []string{"build", ldflags, tagsFlag, "-o", outPath, newPkg}
+	arguments := []string{"build", tagsFlag,"-o", outPath, newPkg}
 	environment := []string{
 		"GOROOT=" + ctx.GOROOT,
 		"GOARCH=" + ctx.GOARCH,
@@ -134,7 +134,7 @@ func obfuscate(pkgName, outPath string) bool {
 		"GOCACHE=" + goCache,
 	}
 
-	cmd := exec.Command("go", arguments...)
+	cmd := exec.Command("tinygo", arguments...)
 	cmd.Env = environment
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
